@@ -1,0 +1,15 @@
+
+
+<h2>Update Your Budget Limit</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="budget_limit">Budget Limit:</label>
+    <input type="number" name="budget_limit" step="0.01" value="{{ user_profile.budget_limit }}" required>
+    <button type="submit" class="btn btn-primary">Update Budget</button>
+</form>
+
+
+{% if user_profile %}
+    <p>Current Budget Limit: {{ user_profile.budget_limit }}</p>
+{% endif %}

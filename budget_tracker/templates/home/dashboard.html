@@ -1,0 +1,73 @@
+{% comment %} {% extends "base.html" %} {% endcomment %}
+{% block content %}
+<h2>Dashboard</h2>
+
+
+
+{% if budget_alert %}
+    <div class="alert alert-danger">
+        <strong>Warning!</strong> You have exceeded your budget limit of {{ budget_limit }}.
+    </div>
+{% endif %}
+
+
+
+
+<h3>Financial Summary</h3>
+<p>Total Income: ${{ total_income }}</p>
+<p>Total Expenses: ${{ total_expenses }}</p>
+<p>Balance: ${{ balance }}</p>
+
+<h3>Your Categories</h3>
+<ul>
+    {% for category in categories %}
+        <li>{{ category.name }}</li>
+    {% empty %}
+        <li>No categories added yet.</li>
+    {% endfor %}
+</ul>
+
+<h3>Your Incomes</h3>
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Amount</th>
+        <th>Category</th>
+        <th>Description</th>
+    </tr>
+    {% for income in incomes %}
+    <tr>
+        <td>{{ income.date }}</td>
+        <td>${{ income.amount }}</td>
+        
+        <td>{{ income.category.name|default:"Uncategorized" }}</td>
+        <td>{{ income.description }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No incomes added yet.</td></tr>
+    {% endfor %}
+</table>
+
+
+<h3>Your Expenses</h3>
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Amount</th>
+        <th>Category</th>
+        <th>Description</th>
+    </tr>
+    {% for expense in expenses %}
+    <tr>
+        <td>{{ expense.date }}</td>
+        <td>${{ expense.amount }}</td>
+        {% comment %} <td>{{ expense.category.name if expense.category else 'Uncategorized' }}</td> {% endcomment %}
+        <td>{{ expense.category.name|default:"Uncategorized" }}</td>
+        <td>{{ expense.description }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No expenses added yet.</td></tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
