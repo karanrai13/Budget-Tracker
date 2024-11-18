@@ -1,15 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Update Budget{% endblock  %}
+{% block style %}
+    
+        .update-form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 8px;
+        }
 
+        .update-h2 {
+            color: #ffd54f;
+            text-align: center;
+        }
 
-<h2>Update Your Budget Limit</h2>
+        .update-form-group label {
+            color: #fff;
+        }
 
-<form method="POST">
-    {% csrf_token %}
-    <label for="budget_limit">Budget Limit:</label>
-    <input type="number" name="budget_limit" step="0.01" value="{{ user_profile.budget_limit }}" required>
-    <button type="submit" class="btn btn-primary">Update Budget</button>
-</form>
+        .update-form-group input {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #ffd54f;
+            padding: 10px;
+            border-radius: 5px;
+        }
 
+        .update-auth-button {
+            background-color: #ffd54f;
+            color: #000;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-self: center;
+        }
 
-{% if user_profile %}
-    <p>Current Budget Limit: {{ user_profile.budget_limit }}</p>
-{% endif %}
+        .update-auth-button:hover {
+            background-color: #ff9800;
+        }
+
+        .update-p {
+            color: #fff;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .update-span {
+            color: #ffd54f;
+        }
+    
+{% endblock %}
+
+{% block content %}
+    <div class="update-form-container">
+        <h2 class="update-h2">Update Your Budget Limit</h2>
+
+        <!-- Display messages -->
+        {% if messages %}
+            <ul style="list-style: none; padding: 0;">
+                {% for message in messages %}
+                    <li style="color: {% if message.tags == 'error' %}#ff6b6b{% else %}#a8e6cf{% endif %};">
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="POST" style="display: flex; flex-direction: column; gap: 20px;">
+            {% csrf_token %}
+
+            <div class="update-form-group">
+                <label for="budget_limit">Budget Limit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <input type="number" name="budget_limit" step="0.01" value="{{ user_profile.budget_limit }}" required>
+            </div>
+
+            <button type="submit" class="update-auth-button">Update Budget</button>
+        </form>
+
+        <!-- Display current budget limit -->
+        {% if user_profile %}
+            <p class="update-p">
+                Current Budget Limit: <span class="update-span">{{ user_profile.budget_limit }}</span>
+            </p>
+        {% endif %}
+    </div>
+{% endblock %}

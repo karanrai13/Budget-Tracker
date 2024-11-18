@@ -1,14 +1,105 @@
-{% comment %} {% extends "base.html" %} {% endcomment %}
-{% block content %}
-<h2>Add Category</h2>
-{% if error %}
-    <p style="color: red;">{{ error }}</p>
-{% endif %}
-<form method="post">
-    {% csrf_token %}
-    <label for="name">Category Name:</label>
-    <input type="text" name="name" required><br>
+{% extends "base.html" %}
 
-    <button type="submit">Save Category</button>
-</form>
+{% block title %}Add Category{% endblock %}
+
+{% block style %}
+.page-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #00bcd4; /* Electric blue for headings */
+}
+
+.alert-container {
+    margin-bottom: 20px;
+}
+
+.alert {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #212121; /* Dark background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: #a8e6cf; /* Light text color for labels */
+}
+
+form input, form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #333; /* Dark border */
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #424242; /* Dark input background */
+    color: #a8e6cf; /* Light text color inside input */
+}
+
+form input:focus, form select:focus {
+    border-color: #00bcd4; /* Electric blue border on focus */
+    outline: none;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #00bcd4; /* Electric blue button */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #00e676; /* Electric green hover effect */
+}
+
+{% endblock %}
+
+{% block content %}
+<h2 class="page-title">Add Category</h2>
+
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="form-container">
+    <form method="post" action="{% url 'category' %}">
+        {% csrf_token %}
+        
+        <label for="name">Category Name:</label>
+        <input type="text" name="name" required><br>
+
+        <label for="category_type">Category Type:</label>
+        <select name="category_type" required>
+            <option value="">--Select Category Type--</option>
+            <option value="INCOME">Income</option>
+            <option value="EXPENSE">Expense</option>
+        </select><br>
+
+        <button type="submit" class="submit-button">Save Category</button>
+    </form>
+</div>
+
 {% endblock %}

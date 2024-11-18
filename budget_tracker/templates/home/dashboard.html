@@ -1,73 +1,104 @@
-{% comment %} {% extends "base.html" %} {% endcomment %}
+{% extends "base.html" %}
+
 {% block content %}
-<h2>Dashboard</h2>
+<!-- Dashboard Title -->
+<div style="text-align: center; padding: 20px;">
+    <h2 style="color: #00FFFF; font-family: 'Poppins', sans-serif; font-size: 36px;">Dashboard</h2>
+</div>
 
-
-
-{% if budget_alert %}
-    <div class="alert alert-danger">
-        <strong>Warning!</strong> You have exceeded your budget limit of {{ budget_limit }}.
+<!-- Financial Summary Section (Card-style layout) -->
+<div style="display: flex; justify-content: space-around; margin: 30px 0;">
+    <div style="background: linear-gradient(135deg, #00FFFF, #00BFFF); border-radius: 10px; padding: 20px; width: 30%; color: white; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h4>Total Income</h4>
+        <p style="font-size: 24px;">₹{{ total_income }}</p>
     </div>
-{% endif %}
+    <div style="background: linear-gradient(135deg, #FF4500, #FF6347); border-radius: 10px; padding: 20px; width: 30%; color: white; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h4>Total Expenses</h4>
+        <p style="font-size: 24px;">₹{{ total_expenses }}</p>
+    </div>
+    <div style="background: linear-gradient(135deg, #32CD32, #98FB98); border-radius: 10px; padding: 20px; width: 30%; color: white; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h4>Balance</h4>
+        <p style="font-size: 24px;">₹{{ balance }}</p>
+    </div>
+</div>
 
+<!-- Categories Section -->
+<div style="margin-bottom: 30px;">
+    <h3 style="color: #00FFFF; font-family: 'Poppins', sans-serif; text-align: center; font-size: 28px; margin-bottom: 20px;">Your Categories</h3>
+    <div style="background-color: #222; padding: 20px; border-radius: 8px;">
+        <ul style="list-style-type: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+            {% for category in categories %}
+                <li style="background-color: #333; padding: 15px; border-radius: 8px; color: #00BFFF; font-size: 18px; text-align: center; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+                    <p>{{ category.name }}</p>
+                    <small style="font-size: 14px; color: #bbb;">({{ category.get_category_type_display }})</small>
+                </li>
+            {% empty %}
+                <li style="background-color: #444; padding: 15px; border-radius: 8px; color: #FF6347; font-size: 18px; text-align: center;">No categories added yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 
+<!-- Incomes Section -->
+<div style="margin-bottom: 30px;">
+    <h3 style="color: #00FFFF; font-family: 'Poppins', sans-serif; text-align: center; font-size: 28px; margin-bottom: 20px;">Your Incomes</h3>
+    <div style="background-color: #1a1a1a; padding: 20px; border-radius: 8px;">
+        <table style="width: 100%; border-collapse: collapse; font-family: 'Poppins', sans-serif;">
+            <thead>
+                <tr style="background-color: #222; color: #00FFFF; text-align: left;">
+                    <th style="padding: 10px; border-radius: 8px;">Date</th>
+                    <th style="padding: 10px; border-radius: 8px;">Amount</th>
+                    <th style="padding: 10px; border-radius: 8px;">Category</th>
+                    <th style="padding: 10px; border-radius: 8px;">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for income in incomes %}
+                <tr style="background-color: #333; color: #FFFFFF; transition: background-color 0.3s ease; border-radius: 8px;">
+                    <td style="padding: 10px;">{{ income.date }}</td>
+                    <td style="padding: 10px;">₹{{ income.amount }}</td>
+                    <td style="padding: 10px;">{{ income.category.name|default:"Uncategorized" }}</td>
+                    <td style="padding: 10px;">{{ income.description }}</td>
+                </tr>
+                {% empty %}
+                <tr style="background-color: #333; color: #FFFFFF;">
+                    <td colspan="4" style="padding: 10px; text-align: center;">No incomes added yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
-
-<h3>Financial Summary</h3>
-<p>Total Income: ${{ total_income }}</p>
-<p>Total Expenses: ${{ total_expenses }}</p>
-<p>Balance: ${{ balance }}</p>
-
-<h3>Your Categories</h3>
-<ul>
-    {% for category in categories %}
-        <li>{{ category.name }}</li>
-    {% empty %}
-        <li>No categories added yet.</li>
-    {% endfor %}
-</ul>
-
-<h3>Your Incomes</h3>
-<table>
-    <tr>
-        <th>Date</th>
-        <th>Amount</th>
-        <th>Category</th>
-        <th>Description</th>
-    </tr>
-    {% for income in incomes %}
-    <tr>
-        <td>{{ income.date }}</td>
-        <td>${{ income.amount }}</td>
-        
-        <td>{{ income.category.name|default:"Uncategorized" }}</td>
-        <td>{{ income.description }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="4">No incomes added yet.</td></tr>
-    {% endfor %}
-</table>
-
-
-<h3>Your Expenses</h3>
-<table>
-    <tr>
-        <th>Date</th>
-        <th>Amount</th>
-        <th>Category</th>
-        <th>Description</th>
-    </tr>
-    {% for expense in expenses %}
-    <tr>
-        <td>{{ expense.date }}</td>
-        <td>${{ expense.amount }}</td>
-        {% comment %} <td>{{ expense.category.name if expense.category else 'Uncategorized' }}</td> {% endcomment %}
-        <td>{{ expense.category.name|default:"Uncategorized" }}</td>
-        <td>{{ expense.description }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="4">No expenses added yet.</td></tr>
-    {% endfor %}
-</table>
+<!-- Expenses Section -->
+<div>
+    <h3 style="color: #00FFFF; font-family: 'Poppins', sans-serif; text-align: center; font-size: 28px; margin-bottom: 20px;">Your Expenses</h3>
+    <div style="background-color: #1a1a1a; padding: 20px; border-radius: 8px;">
+        <table style="width: 100%; border-collapse: collapse; font-family: 'Poppins', sans-serif;">
+            <thead>
+                <tr style="background-color: #222; color: #FF4500; text-align: left;">
+                    <th style="padding: 10px; border-radius: 8px;">Date</th>
+                    <th style="padding: 10px; border-radius: 8px;">Amount</th>
+                    <th style="padding: 10px; border-radius: 8px;">Category</th>
+                    <th style="padding: 10px; border-radius: 8px;">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr style="background-color: #333; color: #FFFFFF; transition: background-color 0.3s ease; border-radius: 8px;">
+                    <td style="padding: 10px;">{{ expense.date }}</td>
+                    <td style="padding: 10px;">₹{{ expense.amount }}</td>
+                    <td style="padding: 10px;">{{ expense.category.name|default:"Uncategorized" }}</td>
+                    <td style="padding: 10px;">{{ expense.description }}</td>
+                </tr>
+                {% empty %}
+                <tr style="background-color: #333; color: #FFFFFF;">
+                    <td colspan="4" style="padding: 10px; text-align: center;">No expenses added yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 {% endblock %}

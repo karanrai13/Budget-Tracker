@@ -25,4 +25,5 @@ urlpatterns = [
   path('category/', views.add_category, name='category'), 
   path('dashboard/', views.dashboard, name='dashboard'), 
   path('budget/', views.update_budget, name='budget'),
+  path('generate-report/', views.generate_report, name='generate_report'),
 ]

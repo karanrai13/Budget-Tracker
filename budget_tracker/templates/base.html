@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Budget Tracker{% endblock %}</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #1a1a1a;   
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #000;   
+            padding: 15px 30px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.7);
+        }
+
+        .nav-logo {
+            color: #00bcd4;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo i {
+            margin-right: 8px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 18px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ff9800;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #00e676;
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            top: 30px;
+            left: 0;
+            min-width: 200px;
+            z-index: 1;
+            border-radius: 5px;
+        }
+
+        .nav-links li:hover .dropdown {
+            display: block;
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 15px 25px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .dropdown a:hover {
+            background-color: #444;
+            color: #ff9800;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-buttons .auth-button {
+            background-color: #00bcd4;
+            color: #000;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .auth-buttons .auth-button:hover {
+            background-color: #ff9800;
+        }
+
+        body .container {
+            color: #a8e6cf;
+        }
+
+        .messages-container {
+            margin: 20px auto;
+            max-width: 80%;
+            text-align: center;
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .messages .message {
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .messages .message.success {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .messages .message.error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .messages .message.warning {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        .messages .message.info {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .auth-username {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #f0f0f0;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: #333;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .auth-username:hover {
+            background-color: #444;
+            transform: scale(1.05);
+        }
+
+        .auth-username i {
+            font-size: 20px;
+            color: #00bcd4;
+        }
+
+        .username-text {
+            color: #fff;
+        }
+
+        {% block style %}{% endblock %}
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'home' %}" class="nav-logo">
+            <i class="fab fa-font-awesome"></i> Budget Tracker
+        </a>
+        <ul class="nav-links">
+            <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a></li>
+            
+            <li>
+                <a href="#"><i class="fas fa-cogs"></i> Features</a>
+                <div class="dropdown">
+                    <a href="{% url 'income' %}"><i class="fas fa-wallet"></i> Add Income</a>
+                    <a href="{% url 'expense' %}"><i class="fas fa-credit-card"></i> Add Expense</a>
+                    <a href="{% url 'category' %}"><i class="fas fa-tags"></i> Add Category</a>
+                    <a href="{% url 'budget' %}"><i class="fas fa-chart-line"></i> Update Budget</a>
+                    <a href="{% url 'generate_report' %}"><i class="fas fa-file-alt"></i> Generate Report</a>
+                    <a {% comment %}href="{% url 'emi' %}"{% endcomment %}><i class="fas fa-calculator"></i> EMI</a>
+                </div>
+            </li>
+
+            <li><a href="{% url 'dashboard' %}"><i class="fas fa-chart-pie"></i> View Dashboard</a></li>
+        </ul>
+        <div class="auth-buttons">
+            {% if user.is_authenticated %}
+                
+                <span class="auth-username">
+                    <i class="fas fa-user-circle"></i> 
+                    <span class="username-text">{{ user.name }}</span>
+                </span>
+                <a href="{% url 'logout' %}" class="auth-button"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="auth-button"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="{% url 'register' %}" class="auth-button"><i class="fas fa-user-plus"></i> Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="messages-container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="message {{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>
